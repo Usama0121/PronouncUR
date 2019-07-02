@@ -83,6 +83,23 @@ def download_file(filename):
     return send_from_directory(app.config['DOWNLOAD_FOLDER'],
                                filename, as_attachment=True)
 
+@app.route('/get_sentence/<text>')
+def get_sentence(text):
+    text=unicodedata.normalize('NFC',text)
+    text=spaceregex.split(text.replace(u'۔',' '))
+    out=g2p_model.decode(text)
+    x=[]
+    for word in out:
+        x.append(word.replace(' ',''))
+    return ' '.join(x)
+
+@app.route('/get_phonemes/<text>')
+def get_phonemes(text):
+    text=unicodedata.normalize('NFC',text)
+    text=spaceregex.split(text.replace(u'۔',' '))
+    out=g2p_model.decode(text)
+    return ' '.join(out)
+
 if __name__ == '__main__':
     app.run(
         host="0.0.0.0",
